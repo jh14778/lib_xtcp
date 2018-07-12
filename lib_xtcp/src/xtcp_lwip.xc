@@ -554,6 +554,7 @@ xtcp_lwip(server xtcp_if i_xtcp[n_xtcp],
                 xassert(error == ERR_OK);
               }
 
+              enqueue_event_and_notify(t_pcb->xtcp_conn.client_num, XTCP_SENT_DATA, &(t_pcb->xtcp_conn));
               pbuf_free(new_pbuf);
             }
           } else {
