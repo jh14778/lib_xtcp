@@ -500,10 +500,11 @@ xtcp_lwip(server xtcp_if i_xtcp[n_xtcp],
           }
         } else {
           struct udp_pcb *unsafe pcb = udp_new();
-          udp_bind(pcb, NULL, port_number);
+          udp_bind(pcb, NULL, 0);
           unsigned char blank_ip[4] = {0,0,0,0};
           memset(pcb->connection_ports, 0, sizeof(unsigned) * CONNECTIONS_PER_UDP_PORT);
           memset(pcb->connection_addrs, 0, sizeof(unsigned char) * CONNECTIONS_PER_UDP_PORT * 4);
+          pcb->remote_port = port_number;
           conn = pcb->xtcp_conn = fill_xtcp_state(conn, (unsigned char * unsafe) &pcb->remote_ip,
                                                   pcb->local_port, pcb->remote_port, pcb);
           if (add_udp_connection(pcb, ip, port_number)) {
