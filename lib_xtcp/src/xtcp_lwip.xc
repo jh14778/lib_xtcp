@@ -325,7 +325,8 @@ xtcp_lwip(server xtcp_if i_xtcp[n_xtcp],
           head.xtcp_conn->mss = tcp_mss(t_pcb);
         }
 
-        event = head.xtcp_conn->event = head.xtcp_event;
+        head.xtcp_conn->event = head.xtcp_event;
+        event = head.xtcp_event;
         head.xtcp_conn->packet_length = bytecount;
         memcpy(&conn, head.xtcp_conn, sizeof(xtcp_connection_t));
 
@@ -505,8 +506,9 @@ xtcp_lwip(server xtcp_if i_xtcp[n_xtcp],
           memset(pcb->connection_ports, 0, sizeof(unsigned) * CONNECTIONS_PER_UDP_PORT);
           memset(pcb->connection_addrs, 0, sizeof(unsigned char) * CONNECTIONS_PER_UDP_PORT * 4);
           pcb->remote_port = port_number;
-          conn = pcb->xtcp_conn = fill_xtcp_state(conn, (unsigned char * unsafe) &pcb->remote_ip,
+          pcb->xtcp_conn = fill_xtcp_state(conn, (unsigned char * unsafe) &pcb->remote_ip,
                                                   pcb->local_port, pcb->remote_port, pcb);
+          conn = pcb->xtcp_conn;
           if (add_udp_connection(pcb, ip, port_number)) {
             enqueue_event_and_notify(i, XTCP_NEW_CONNECTION, &(pcb->xtcp_conn));
             client_data_buffers[index].state = XTCP_CONNECTED;
